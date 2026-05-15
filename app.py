@@ -1,6 +1,8 @@
 import streamlit as st
 from datetime import datetime, time
+from PIL import Image, ImageDraw, ImageFont
 import random
+import os
 
 st.set_page_config(
     page_title="Stella Maris AI Marketing Studio",
@@ -16,224 +18,173 @@ SAFE_WINDOWS = [
 
 DEFAULT_TAGS = "stellamaris damenuhr schmuckliebe luxurywatch elegantschmuck premiumstyle keramikuhr"
 
-MARKETING_HOOKS = [
-    "Zeitlose Eleganz beginnt bei den Details.",
-    "Luxus muss nicht laut sein.",
-    "Ein eleganter Look beginnt am Handgelenk.",
-    "Minimalistisch. Edel. Stella Maris.",
-    "Die perfekte Kombination aus Schmuck und Stil.",
-]
-
-VISUAL_STYLES = [
-    "Luxus-Lifestyle mit Marmor und Goldlicht",
-    "Elegante Fashion-Kampagne mit weichen Schatten",
-    "Premium Produktaufnahme mit hellem Studio-Licht",
-    "Instagram Luxury Branding mit cleanem Hintergrund",
-    "Cinematic Reel Style mit Detailaufnahmen",
-]
-
-VIDEO_IDEAS = [
-    "Slow Motion Detailshots mit eleganter Musik",
-    "Luxury Reel mit Outfit-Wechsel und Nahaufnahmen",
-    "Produkt Showcase mit Zoom-Effekten",
-    "UGC Premium Style mit natürlichem Licht",
-    "Fashion Cinematic Video mit Close-Ups",
-]
-
-PRODUCT_TEXTS = [
-    "Premium-Keramik, Saphirglas und zeitlose Eleganz.",
+captions = [
+    "Zeitlose Eleganz trifft modernes Luxusdesign.",
+    "Luxus beginnt bei den Details.",
     "Elegante Schmuckstücke für besondere Momente.",
-    "Luxuriöse Designs inspiriert von moderner Eleganz.",
-    "Minimalistische Luxus-Uhren mit hochwertigen Materialien.",
+    "Minimalistische Luxury-Watches für starke Looks.",
+    "Premium Style für jeden Tag."
 ]
 
-def clean_tags(raw_tags):
-    result = []
-    for item in raw_tags.replace(",", " ").replace(";", " ").split():
-        tag = item.strip().replace("#", "").lower()
-        if tag and tag not in result:
-            result.append(tag)
-    return result[:30]
+marketing_concepts = [
+    "Elegante Luxus-Kampagne mit weichen Schatten und hochwertiger Fashion-Atmosphäre.",
+    "Minimalistisches Premium-Design mit luxuriösen Reflexionen.",
+    "Goldene Lichtstimmung mit edler Schmuck-Inszenierung.",
+    "Hochwertiges Studio-Setup mit Fashion-Luxury-Look."
+]
 
-def is_safe_time(selected_time):
-    return any(start <= selected_time <= end for _, start, end in SAFE_WINDOWS)
+video_concepts = [
+    "Slow-Motion Nahaufnahme mit sanften Kamerafahrten.",
+    "Luxury Reel mit Detailshots und eleganter Musik.",
+    "Fashion-Reel mit Fokus auf hochwertige Materialien.",
+    "Instagram Luxury Campaign mit weichen Übergängen."
+]
 
-st.title("💎 Stella Maris AI Marketing Studio")
-st.caption("Erstellt hochwertige Marketingbilder, Luxus-Reels, Captions und Social-Media-Kampagnen automatisch.")
+st.title("💎 Stella Maris Growth App")
+st.caption("AI Marketing Generator für Bilder, Reels und Luxus-Content")
 
 st.warning(
-    "Die App erstellt Marketing-Content und Luxus-Design-Ideen. "
-    "Riskante Automatisierung wie Auto-Follow, Massen-DMs oder Spam-Aktionen bleibt deaktiviert."
+    "Keine Auto-Follows oder Spam-Aktionen. "
+    "Die App erstellt sichere Marketing-Entwürfe."
 )
 
-st.divider()
+col1, col2 = st.columns(2)
 
-left, right = st.columns([1, 1])
-
-with left:
-    st.subheader("Marketing-Generator")
-
-    drafts = st.number_input(
-        "Wie viele Entwürfe sollen erstellt werden?",
+with col1:
+    amount = st.number_input(
+        "Wie viele Entwürfe erstellen?",
         min_value=1,
-        max_value=50,
-        value=5,
-        step=1
+        max_value=20,
+        value=5
     )
 
     content_type = st.selectbox(
-        "Content-Art",
+        "Welche Art Content?",
+        ["Marketing Bilder", "Reel / Video", "Story", "Luxury Kampagne"]
+    )
+
+    product_focus = st.selectbox(
+        "Produkt Fokus",
         [
-            "Luxury Reel",
-            "Marketing Bild",
-            "Instagram Story",
-            "TikTok Video",
-            "Produktkampagne",
+            "Damenuhren",
+            "Luxus Schmuck",
+            "Keramikuhren",
+            "Diamantschmuck",
+            "Premium Fashion"
         ]
     )
 
-    source_mode = st.radio(
-        "Content-Quelle",
-        [
-            "Stella Maris Webseiten automatisch verwenden",
-            "Eigene Bilder hochladen",
-            "Externe Webseite verwenden",
-        ]
+    hashtags = st.text_area(
+        "Hashtags / Zielgruppe",
+        DEFAULT_TAGS
     )
 
-    if source_mode == "Stella Maris Webseiten automatisch verwenden":
-        st.success("Verwendet stella-maris-world.de und stella-maris-world.com als Inspirationsquelle.")
-        st.write("Quellen:")
-        st.write("- https://www.stella-maris-world.de")
-        st.write("- https://www.stella-maris-world.com")
-
-    if source_mode == "Eigene Bilder hochladen":
-        uploaded_files = st.file_uploader(
-            "Eigene Produktbilder",
-            type=["png", "jpg", "jpeg", "webp"],
-            accept_multiple_files=True
-        )
-
-        if uploaded_files:
-            st.success(f"{len(uploaded_files)} Bild(er) hochgeladen")
-            preview = st.columns(3)
-            for i, file in enumerate(uploaded_files[:6]):
-                with preview[i % 3]:
-                    st.image(file, use_container_width=True)
-
-    if source_mode == "Externe Webseite verwenden":
-        external_url = st.text_input(
-            "Webseiten-Link",
-            placeholder="https://example.com"
-        )
-
-        if external_url:
-            st.success(f"Quelle gespeichert: {external_url}")
-
-    raw_tags = st.text_area(
-        "Hashtags / Zielgruppen",
-        value=DEFAULT_TAGS
+with col2:
+    uploaded = st.file_uploader(
+        "Eigene Produktbilder hochladen (JPG)",
+        type=["jpg", "jpeg"]
     )
 
-    tags = clean_tags(raw_tags)
+posting_time = st.time_input(
+    "Geplante Posting Zeit",
+    value=datetime.now().time()
+)
 
-    selected_time = st.time_input(
-        "Geplante Posting-Zeit",
-        value=datetime.now().time().replace(second=0, microsecond=0)
-    )
+safe = False
 
-    if is_safe_time(selected_time):
-        st.success("Sicheres Posting-Zeitfenster erkannt.")
-    else:
-        st.error("Diese Uhrzeit liegt außerhalb der empfohlenen Zeiten.")
+for name, start, end in SAFE_WINDOWS:
+    if start <= posting_time <= end:
+        safe = True
 
-    generate = st.button("Luxury Content generieren", type="primary")
+if safe:
+    st.success("Sicheres Posting-Zeitfenster erkannt.")
+else:
+    st.error("Ungewöhnliche Uhrzeit. Nutze besser typische Aktivitätszeiten.")
 
-with right:
-    st.subheader("Luxus-Marketing Features")
-
-    st.markdown("### ✨ Automatische Luxus-Positionierung")
-    st.write("Produkte werden mit hochwertigen Hintergründen, eleganten Schatten und Premium-Lifestyle-Optik dargestellt.")
-
-    st.markdown("### 🎬 Video- & Reel-Konzepte")
-    st.write("Automatische Reel-Strukturen mit Hooks, Kameraideen und CTA-Vorschlägen.")
-
-    st.markdown("### 🖼️ Marketingbild-Konzepte")
-    st.write("Luxus-Kampagnen mit Produktfokus, Fashion-Look und Premium-Branding.")
-
-    st.markdown("### 📈 Social-Media-Wachstum")
-    st.write("Captions, Hashtags und Kampagnen-Ideen für Instagram, TikTok und Pinterest.")
-
-st.divider()
+generate = st.button("Luxury Content generieren")
 
 if generate:
-    st.subheader("Generierte Luxus-Entwürfe")
 
-    all_text = []
+    st.header("Generierte Luxus-Entwürfe")
 
-    for i in range(int(drafts)):
-        hook = random.choice(MARKETING_HOOKS)
-        visual = random.choice(VISUAL_STYLES)
-        video = random.choice(VIDEO_IDEAS)
-        product_text = random.choice(PRODUCT_TEXTS)
-        hashtags = " ".join([f"#{tag}" for tag in tags[:10]])
+    os.makedirs("generated", exist_ok=True)
 
-        caption = f"{hook} {product_text} #stellamaris #luxurywatch #schmuckliebe"
-        marketing = (
-            f"Positioniere die Uhr oder den Schmuck zentral mit {visual.lower()}, "
-            "hochwertigen Reflexionen, cleanem Luxus-Hintergrund und eleganter Fashion-Atmosphäre."
-        )
-        reel = (
-            f"Nutze {video.lower()}, langsame Kamerafahrten, Detailshots "
-            "und elegante Übergänge mit Luxus-Musik."
-        )
-        prompt = (
-            f"Luxury Stella Maris campaign, premium jewelry and watches, elegant studio lighting, "
-            f"luxury fashion style, ultra realistic, Instagram luxury branding, {visual}"
+    for i in range(amount):
+
+        caption = random.choice(captions)
+        marketing = random.choice(marketing_concepts)
+        video = random.choice(video_concepts)
+
+        img = Image.new("RGB", (1080, 1350), color=(18, 18, 18))
+
+        draw = ImageDraw.Draw(img)
+
+        draw.rectangle(
+            [(40, 40), (1040, 1310)],
+            outline=(212, 175, 55),
+            width=5
         )
 
-        with st.container(border=True):
-            st.markdown(f"## {content_type} {i+1}")
+        title = "STELLA MARIS"
 
-            st.markdown("### Caption")
-            st.write(caption)
+        text = f"""
+{product_focus}
 
-            st.markdown("### Marketingbild-Konzept")
-            st.write(marketing)
+{caption}
 
-            st.markdown("### Video-/Reel-Konzept")
-            st.write(reel)
+Luxury Collection
+"""
 
-            st.markdown("### KI-Bildprompt")
-            st.code(prompt)
+        try:
+            font_big = ImageFont.truetype("arial.ttf", 60)
+            font_small = ImageFont.truetype("arial.ttf", 36)
+        except:
+            font_big = ImageFont.load_default()
+            font_small = ImageFont.load_default()
 
-            st.markdown("### Hashtags")
-            st.write(hashtags)
-
-        all_text.append(
-            f"{content_type} {i+1}\n\n"
-            f"Caption:\n{caption}\n\n"
-            f"Marketingbild-Konzept:\n{marketing}\n\n"
-            f"Video-/Reel-Konzept:\n{reel}\n\n"
-            f"KI-Bildprompt:\n{prompt}\n\n"
-            f"Hashtags:\n{hashtags}\n\n"
-            "----------------------------------------\n\n"
+        draw.text(
+            (120, 120),
+            title,
+            fill=(212, 175, 55),
+            font=font_big
         )
 
-    st.download_button(
-        "Alle Entwürfe als TXT herunterladen",
-        data="".join(all_text),
-        file_name="stella_maris_marketing_entwuerfe.txt",
-        mime="text/plain"
-    )
+        draw.text(
+            (120, 320),
+            text,
+            fill=(255, 255, 255),
+            font=font_small
+        )
 
-st.divider()
+        file_name = f"generated/stella_maris_{i+1}.jpg"
 
-st.subheader("Empfohlene sichere Posting-Zeiten")
-for name, start, end in SAFE_WINDOWS:
-    st.write(f"**{name}:** {start.strftime('%H:%M')}–{end.strftime('%H:%M')}")
+        img.save(file_name, quality=95)
 
-st.info(
-    "Die App kann mit eigenen Bildern, Webseiten oder Stella-Maris-Inhalten verwendet werden "
-    "und erstellt daraus Luxus-Marketing-Kampagnen."
-)
+        st.subheader(f"Marketing Bild {i+1}")
+
+        st.image(file_name)
+
+        with open(file_name, "rb") as file:
+            st.download_button(
+                label=f"JPG herunterladen {i+1}",
+                data=file,
+                file_name=f"stella_maris_{i+1}.jpg",
+                mime="image/jpeg"
+            )
+
+        st.markdown("### Caption")
+        st.write(caption)
+
+        st.markdown("### Marketingbild-Konzept")
+        st.write(marketing)
+
+        st.markdown("### Video-/Reel-Konzept")
+        st.write(video)
+
+        st.markdown("### Hashtags")
+        st.code(
+            "#stellamaris #luxurywatch #schmuckliebe "
+            "#premiumstyle #luxuryfashion"
+        )
+
+        st.divider()
