@@ -2,12 +2,12 @@
 
 Streamlit-App fuer Stella Maris, die neue Premium-Marketingmotive erzeugt:
 
-- 3 unterschiedliche Bildentwuerfe pro Kampagne
+- frei waehlbare Anzahl von 0 bis 10 Bildentwuerfen pro Kampagne
 - Slogan und CTA direkt im Bild, ohne transparente Textbox
 - Aenderungsfeld pro Entwurf, um das Bild anhand deiner Beschreibung bearbeiten oder neu generieren zu lassen
-- ca. 20 Sekunden MP4-Reel aus den 3 Entwuerfen
+- ca. 20 Sekunden MP4-Reel aus den erzeugten Entwuerfen
 
-Die App nutzt keine festen Asset-Bilder. Die Bilder werden ueber die OpenAI Image API neu erzeugt.
+Die App nutzt keine festen Asset-Bilder. Die Bilder werden ueber die OpenAI Image API neu erzeugt. Es sind mehrere Motive fuer Geschenk, Business, Abend, Reise, Hochzeit, Muttertag, Cafe, Beauty, Gala, Resort und Detailkampagnen enthalten.
 
 ## Streamlit Cloud
 

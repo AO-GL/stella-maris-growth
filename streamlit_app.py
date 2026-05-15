@@ -53,6 +53,62 @@ PRESETS = [
         "Uhr und Schmuck als stilvolle Begleiter fuer Reise, Alltag und besondere Plaene.",
         "#StellaMaris #TravelStyle #DamenUhr #OutfitInspiration #AccessoireLiebe",
     ),
+    CampaignPreset(
+        "Hochzeit / Braut",
+        "Eine elegante Braut oder Hochzeitsgaestin in heller Seide, Stella-Maris-Uhr und Schmuck sichtbar, weiche Blumen, Spiegel, Champagnerlicht, luxurioese Vorbereitungsszene.",
+        "Ein Detail fuer den Tag, der bleibt.",
+        "Stella Maris veredelt die Momente, die man nicht wiederholt.",
+        "#StellaMaris #WeddingStyle #BrautSchmuck #EleganterLook #ZeitloseEleganz",
+    ),
+    CampaignPreset(
+        "Muttertag / Geschenk",
+        "Eine erwachsene Tochter ueberreicht einer eleganten Frau eine hochwertige Schmuckbox, warme Wohnatmosphaere, Uhr und Kette sichtbar, Rosen und persoenlicher Luxusmoment.",
+        "Fuer die Frau, die alles bedeutet.",
+        "Ein Geschenk mit Stil, Wert und Erinnerung.",
+        "#StellaMaris #Muttertag #Geschenkidee #SchmuckGeschenk #UhrenLiebe",
+    ),
+    CampaignPreset(
+        "Cafe / Alltag",
+        "Eine stilvolle Frau sitzt in einem hellen eleganten Cafe, Kaffee, Notizbuch, Uhr am Handgelenk, dezenter Schmuck, moderne feminine Alltags-Eleganz.",
+        "Alltag, aber mit Haltung.",
+        "Kleine Details machen aus einem normalen Tag einen Stella-Maris-Moment.",
+        "#StellaMaris #CafeStyle #DamenUhr #SchmuckLiebe #DailyLuxury",
+    ),
+    CampaignPreset(
+        "Beauty / Vanity",
+        "Eine elegante Frau vor einem hellen Schminktisch, Parfum, Perlen, Schmucktablett, Uhr und Ohrringe sichtbar, weiche Beauty-Kampagnen-Atmosphaere.",
+        "Schoenheit liegt im Detail.",
+        "Stella Maris verbindet Schmuck, Uhr und Outfit zu einem ruhigen Luxusmoment.",
+        "#StellaMaris #BeautyStyle #JewelleryStyle #LuxusAccessoires #EleganterLook",
+    ),
+    CampaignPreset(
+        "Gala / Event",
+        "Eine elegante Frau im Abendkleid auf dem Weg zu einer Gala, dunkler Premium-Hintergrund, warmes Licht, funkelnder Schmuck, Uhr und Ring sichtbar.",
+        "Wenn der Moment gross wird.",
+        "Ein Auftritt beginnt oft mit dem richtigen Detail.",
+        "#StellaMaris #GalaLook #EveningStyle #DiamantSchmuck #StatementLook",
+    ),
+    CampaignPreset(
+        "Sommer / Resort",
+        "Eine stilvolle Frau in einem luxurioesen Resort oder auf einer Terrasse am Meer, helles Outfit, Sonnenlicht, Uhr und Schmuck sichtbar, elegante Urlaubsstimmung.",
+        "Sommer, der nach Stil aussieht.",
+        "Leichte Looks, hochwertige Details und ein Gefuehl von Reise.",
+        "#StellaMaris #ResortStyle #TravelStyle #SommerLook #DamenUhr",
+    ),
+    CampaignPreset(
+        "Schmuckdetail / Close-up",
+        "Ein hochwertiger Close-up-Moment von Handgelenk, Ring, Kette und Uhr an einer eleganten Frau, weiche Stoffe, Rosen, Perlmutt, Gold- und Teal-Akzente.",
+        "Leise Details. Starke Wirkung.",
+        "Ein Motiv fuer Produktnaehe, Detailwirkung und hochwertige Social Ads.",
+        "#StellaMaris #Schmuckdetail #UhrenLiebe #Perlmutt #Saphirglas",
+    ),
+    CampaignPreset(
+        "Paar / Geschenk Moment",
+        "Ein eleganter Partner schenkt einer Frau eine Stella-Maris-Schmuckbox, intime Premium-Atmosphaere, Kerzenlicht, Uhr und Schmuck sichtbar, romantisch aber modern.",
+        "Ein Geschenk mit Bedeutung.",
+        "Fuer Momente, in denen ein Detail mehr sagt als viele Worte.",
+        "#StellaMaris #GeschenkMoment #RomanticGift #SchmuckGeschenk #LuxusAccessoires",
+    ),
 ]
 
 
@@ -60,6 +116,13 @@ DRAFT_DIRECTIONS = [
     "Variante 1: emotionale Lifestyle-Szene mit Frau, Geschenk, Schmuck und klar sichtbarer Uhr. Sehr hochwertig, warm, nahbar.",
     "Variante 2: eleganter Fashion-Moment mit Outfit, Handgelenk, Schmuckdetails und Premium-Interieur. Mehr Editorial-Look.",
     "Variante 3: produktnaher Luxusmoment mit Handgelenk, Uhr, Ring, Kette, Blumen und hochwertiger Lichtsetzung. Mehr Detailfokus.",
+    "Variante 4: helle Beauty-Kampagne mit Schminktisch, Parfum, Seide und Schmucktablett. Sehr feminin und edel.",
+    "Variante 5: moderne Business-Szene mit klarer Haltung, hellem Office, Uhr sichtbar und selbstbewusstem Premium-Look.",
+    "Variante 6: romantischer Geschenk-Moment mit Box, Rosen, weichen Stoffen und emotionalem Blick auf das Produkt.",
+    "Variante 7: luxurioeser Reise- oder Hotelmoment mit Spiegel, Koffer, Seidentuch, Schmuck und Uhr als Stylingdetail.",
+    "Variante 8: Abend- und Dinner-Motiv mit warmem Licht, dunkler Eleganz, funkelnden Details und hochwertiger Stimmung.",
+    "Variante 9: sehr naher Detail-Shot von Schmuck, Uhr, Handgelenk, Ring und hochwertiger Materialwirkung.",
+    "Variante 10: freier Social-Ad-Moment mit unerwarteter, aber realistischer Stella-Maris-Luxuskomposition.",
 ]
 
 
@@ -377,7 +440,7 @@ def selected_preset(name: str) -> CampaignPreset:
 st.set_page_config(page_title="Stella Maris Content Autopilot", layout="wide")
 st.title("Stella Maris Content Autopilot")
 st.caption(
-    "Erzeugt pro Kampagne drei neue Premium-Bildentwuerfe, direkte Sloganbilder und ein ca. 20 Sekunden langes MP4-Reel."
+    "Erzeugt pro Kampagne 0 bis 10 Premium-Bildentwuerfe, direkte Sloganbilder und ein ca. 20 Sekunden langes MP4-Reel."
 )
 
 api_key = get_api_key()
@@ -400,15 +463,19 @@ with st.sidebar:
     cta = st.text_input("CTA im Bild", value="Inspiration speichern")
     quality = st.selectbox("Qualitaet", ["medium", "high", "low"], index=0)
     video_brief = st.text_input("Video-Szenen", value="Lifestyle-Moment, Schmuckdetail, Outfit, CTA")
-    generate = st.button("3 Entwuerfe erzeugen", disabled=not api_key)
+    draft_count = st.selectbox("Anzahl Entwuerfe", list(range(0, 11)), index=3)
+    generate = st.button(f"{draft_count} Entwuerfe erzeugen", disabled=not api_key)
 
-if generate and api_key:
-    progress = st.progress(0, text="Erzeuge 3 unterschiedliche Bildentwuerfe...")
+if generate and api_key and draft_count == 0:
+    st.info("0 Entwuerfe gewaehlt. Es wurde nichts erzeugt.")
+
+if generate and api_key and draft_count > 0:
+    progress = st.progress(0, text=f"Erzeuge {draft_count} unterschiedliche Bildentwuerfe...")
     drafts = []
     try:
-        for index, direction in enumerate(DRAFT_DIRECTIONS, start=1):
+        for index, direction in enumerate(DRAFT_DIRECTIONS[:draft_count], start=1):
             drafts.append(create_draft(api_key, preset, extra_brief, slogan, cta, quality, direction))
-            progress.progress(int(index / 3 * 100), text=f"Entwurf {index} von 3 fertig")
+            progress.progress(int(index / draft_count * 100), text=f"Entwurf {index} von {draft_count} fertig")
         st.session_state.campaigns.insert(
             0,
             {
@@ -426,14 +493,14 @@ if generate and api_key:
             },
         )
         progress.empty()
-        st.success("3 unterschiedliche Entwuerfe erzeugt. Du kannst jeden Entwurf unten aendern lassen.")
+        st.success(f"{draft_count} unterschiedliche Entwuerfe erzeugt. Du kannst jeden Entwurf unten aendern lassen.")
     except Exception as exc:
         progress.empty()
         st.error(f"Die Generierung ist fehlgeschlagen: {exc}")
 
 if not st.session_state.campaigns:
     st.info(
-        "Waehle links ein Motiv und klicke auf '3 Entwuerfe erzeugen'. Die App erzeugt neue Bilder per KI, keine festen Asset-Dateien."
+        "Waehle links ein Motiv, die Anzahl der Entwuerfe und klicke auf 'Entwuerfe erzeugen'. Die App erzeugt neue Bilder per KI, keine festen Asset-Dateien."
     )
 
 for campaign in st.session_state.campaigns:
@@ -443,52 +510,60 @@ for campaign in st.session_state.campaigns:
     st.write(campaign["caption"])
     st.code(campaign["hashtags"], language=None)
 
-    columns = st.columns(3)
-    for draft_index, draft in enumerate(campaign["drafts"]):
-        with columns[draft_index]:
-            st.image(draft["poster"], use_container_width=True)
-            st.download_button(
-                "Bild herunterladen",
-                image_bytes(draft["poster"]),
-                file_name=f"stella-maris-{campaign['id'][:8]}-entwurf-{draft_index + 1}.png",
-                mime="image/png",
-                key=f"download_image_{draft['id']}",
-            )
-            with st.form(f"edit_form_{draft['id']}"):
-                change_request = st.text_area(
-                    "Aenderungen fuer dieses Bild",
-                    value="",
-                    placeholder="z.B. mehr Schmuck sichtbar, anderes Outfit, mehr Hotelzimmer, weniger Textflaeche",
-                    key=f"change_text_{draft['id']}",
+    for row_start in range(0, len(campaign["drafts"]), 3):
+        row_drafts = campaign["drafts"][row_start : row_start + 3]
+        columns = st.columns(len(row_drafts))
+        for offset, draft in enumerate(row_drafts):
+            draft_index = row_start + offset
+            with columns[offset]:
+                st.image(draft["poster"], use_container_width=True)
+                st.download_button(
+                    "Bild herunterladen",
+                    image_bytes(draft["poster"]),
+                    file_name=f"stella-maris-{campaign['id'][:8]}-entwurf-{draft_index + 1}.png",
+                    mime="image/png",
+                    key=f"download_image_{draft['id']}",
                 )
-                submitted = st.form_submit_button("Entwurf neu erzeugen")
-            if submitted:
-                if not api_key:
-                    st.error("OPENAI_API_KEY fehlt.")
-                elif not change_request.strip():
-                    st.warning("Bitte beschreibe kurz, was geaendert werden soll.")
-                else:
-                    with st.spinner("Erzeuge geaenderte Bildvariante..."):
-                        try:
-                            campaign["drafts"][draft_index] = create_draft(
-                                api_key,
-                                preset,
-                                campaign["extra_brief"],
-                                campaign["slogan"],
-                                campaign["cta"],
-                                campaign["quality"],
-                                draft["direction"],
-                                change_request.strip(),
-                                source_image=draft["source"],
-                            )
-                            campaign["video"] = None
-                            st.rerun()
-                        except Exception as exc:
-                            st.error(f"Aenderung fehlgeschlagen: {exc}")
+                with st.form(f"edit_form_{draft['id']}"):
+                    change_request = st.text_area(
+                        "Aenderungen fuer dieses Bild",
+                        value="",
+                        placeholder="z.B. mehr Schmuck sichtbar, anderes Outfit, mehr Hotelzimmer, weniger Textflaeche",
+                        key=f"change_text_{draft['id']}",
+                    )
+                    submitted = st.form_submit_button("Entwurf neu erzeugen")
+                if submitted:
+                    if not api_key:
+                        st.error("OPENAI_API_KEY fehlt.")
+                    elif not change_request.strip():
+                        st.warning("Bitte beschreibe kurz, was geaendert werden soll.")
+                    else:
+                        with st.spinner("Erzeuge geaenderte Bildvariante..."):
+                            try:
+                                campaign["drafts"][draft_index] = create_draft(
+                                    api_key,
+                                    preset,
+                                    campaign["extra_brief"],
+                                    campaign["slogan"],
+                                    campaign["cta"],
+                                    campaign["quality"],
+                                    draft["direction"],
+                                    change_request.strip(),
+                                    source_image=draft["source"],
+                                )
+                                campaign["video"] = None
+                                st.rerun()
+                            except Exception as exc:
+                                st.error(f"Aenderung fehlgeschlagen: {exc}")
 
     video_col, copy_col = st.columns([1, 1])
     with video_col:
-        if st.button("20-Sekunden-Video aus diesen 3 Entwuerfen erstellen", key=f"video_button_{campaign['id']}"):
+        draft_total = len(campaign["drafts"])
+        if st.button(
+            f"20-Sekunden-Video aus {draft_total} Entwuerfen erstellen",
+            key=f"video_button_{campaign['id']}",
+            disabled=draft_total == 0,
+        ):
             with st.spinner("Erstelle MP4-Video mit mehreren Szenen..."):
                 try:
                     campaign["video"] = render_reel_mp4(
