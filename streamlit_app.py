@@ -1,8 +1,10 @@
 from __future__ import annotations
 
 import base64
+import hashlib
 import io
 import os
+import re
 import tempfile
 import uuid
 from dataclasses import dataclass
@@ -126,11 +128,90 @@ DRAFT_DIRECTIONS = [
 ]
 
 
+LOCAL_SLOGAN_POOL = [
+    "Ein Detail, das deinen Look vollendet.",
+    "Eleganz, die jeden Moment begleitet.",
+    "Kleine Details. Grosser Auftritt.",
+    "Zeitlos schoen. Jeden Tag tragbar.",
+    "Stil beginnt am Handgelenk.",
+    "Luxus, der leise wirkt.",
+    "Fuer Momente, die bleiben.",
+    "Mehr als Schmuck. Ein Gefuehl.",
+    "Dein Look. Dein Moment. Stella Maris.",
+    "Wenn Details den Unterschied machen.",
+    "Feine Eleganz fuer starke Auftritte.",
+    "Schoenheit, die nicht laut sein muss.",
+    "Ein Geschenk mit Bedeutung.",
+    "Der letzte Schliff fuer deinen Stil.",
+    "Premium-Details fuer jeden Tag.",
+]
+
+
 def get_api_key() -> str | None:
     try:
         return st.secrets.get("OPENAI_API_KEY") or os.getenv("OPENAI_API_KEY")
     except Exception:
         return os.getenv("OPENAI_API_KEY")
+
+
+def stable_hash(value: str) -> str:
+    return hashlib.sha1(value.encode("utf-8")).hexdigest()[:12]
+
+
+def clean_slogan_line(line: str) -> str:
+    line = re.sub(r"^\s*[-*]?\s*\d*[\).:-]?\s*", "", line).strip()
+    line = line.strip('"').strip("'").strip()
+    return line
+
+
+def fallback_slogans(preset: CampaignPreset, round_index: int = 0) -> list[str]:
+    rotated = LOCAL_SLOGAN_POOL[round_index % len(LOCAL_SLOGAN_POOL) :] + LOCAL_SLOGAN_POOL[: round_index % len(LOCAL_SLOGAN_POOL)]
+    options = [preset.slogan] + rotated
+    unique: list[str] = []
+    for option in options:
+        if option and option not in unique:
+            unique.append(option)
+    return unique[:5]
+
+
+def parse_slogans(text: str) -> list[str]:
+    slogans: list[str] = []
+    for line in text.replace("\r", "\n").split("\n"):
+        slogan = clean_slogan_line(line)
+        if 8 <= len(slogan) <= 70 and slogan not in slogans:
+            slogans.append(slogan)
+    return slogans[:5]
+
+
+def generate_slogans(api_key: str | None, preset: CampaignPreset, extra_brief: str, round_index: int) -> list[str]:
+    fallback = fallback_slogans(preset, round_index)
+    if not api_key:
+        return fallback
+
+    prompt = f"""
+Erstelle exakt 5 kurze deutsche Premium-Slogans fuer Stella Maris Uhren und Schmuck.
+Motiv: {preset.name}
+Szene: {preset.scene}
+Zusatzwunsch: {extra_brief or "edler, femininer Luxus fuer Social Media"}
+Regeln:
+- Jede Zeile genau ein Slogan.
+- Maximal 8 Woerter pro Slogan.
+- Hochwertig, elegant, emotional, nicht kitschig.
+- Keine Hashtags, keine Emojis, keine Anfuehrungszeichen.
+- Keine Erklaerungen.
+Runde: {round_index}
+""".strip()
+
+    try:
+        client = OpenAI(api_key=api_key)
+        response = client.responses.create(
+            model=os.getenv("OPENAI_TEXT_MODEL", "gpt-4.1-mini"),
+            input=prompt,
+        )
+        slogans = parse_slogans(getattr(response, "output_text", ""))
+        return slogans if len(slogans) == 5 else fallback
+    except Exception:
+        return fallback
 
 
 def font(size: int, bold: bool = False) -> ImageFont.FreeTypeFont | ImageFont.ImageFont:
@@ -450,6 +531,12 @@ if not api_key:
 
 if "campaigns" not in st.session_state:
     st.session_state.campaigns = []
+if "slogan_options" not in st.session_state:
+    st.session_state.slogan_options = []
+if "slogan_context" not in st.session_state:
+    st.session_state.slogan_context = ""
+if "slogan_round" not in st.session_state:
+    st.session_state.slogan_round = 0
 
 with st.sidebar:
     st.header("Kampagne erzeugen")
@@ -459,7 +546,34 @@ with st.sidebar:
         "Eigene Bildbeschreibung",
         placeholder="z.B. Frau mit Geschenkbox, Rosen, helle Luxusatmosphaere, weisses Outfit",
     )
-    slogan = st.text_input("Slogan im Bild", value=preset.slogan)
+    slogan_context = f"{preset.name}|{extra_brief}"
+    if st.session_state.slogan_context != slogan_context:
+        st.session_state.slogan_context = slogan_context
+        st.session_state.slogan_round = 0
+        st.session_state.slogan_options = fallback_slogans(preset, st.session_state.slogan_round)
+
+    st.markdown("**Slogan-Entwuerfe**")
+    if st.button("Neue 5 Slogans erstellen"):
+        st.session_state.slogan_round += 1
+        with st.spinner("Erstelle 5 neue Slogans..."):
+            st.session_state.slogan_options = generate_slogans(
+                api_key,
+                preset,
+                extra_brief,
+                st.session_state.slogan_round,
+            )
+
+    if not st.session_state.slogan_options:
+        st.session_state.slogan_options = fallback_slogans(preset, st.session_state.slogan_round)
+
+    slogan_choice_key = f"slogan_choice_{stable_hash(st.session_state.slogan_context + str(st.session_state.slogan_round))}"
+    selected_slogan = st.selectbox(
+        "Slogan auswaehlen",
+        st.session_state.slogan_options,
+        key=slogan_choice_key,
+    )
+    slogan_edit_key = f"slogan_edit_{stable_hash(selected_slogan + str(st.session_state.slogan_round))}"
+    slogan = st.text_input("Slogan im Bild bearbeiten", value=selected_slogan, key=slogan_edit_key)
     cta = st.text_input("CTA im Bild", value="Inspiration speichern")
     quality = st.selectbox("Qualitaet", ["medium", "high", "low"], index=0)
     video_brief = st.text_input("Video-Szenen", value="Lifestyle-Moment, Schmuckdetail, Outfit, CTA")

@@ -3,6 +3,7 @@
 Streamlit-App fuer Stella Maris, die neue Premium-Marketingmotive erzeugt:
 
 - frei waehlbare Anzahl von 0 bis 10 Bildentwuerfen pro Kampagne
+- 5 Slogan-Entwuerfe mit Button fuer neue 5 Vorschlaege
 - Slogan und CTA direkt im Bild, ohne transparente Textbox
 - Aenderungsfeld pro Entwurf, um das Bild anhand deiner Beschreibung bearbeiten oder neu generieren zu lassen
 - ca. 20 Sekunden MP4-Reel aus den erzeugten Entwuerfen
